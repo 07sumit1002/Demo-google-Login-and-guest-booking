@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest Ticket Booking</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#num_tickets').on('input', function() {
+                var numTickets = $(this).val();
+                var pricePerTicket = 50;
+                var totalPrice = numTickets * pricePerTicket;
+                $('#total_price').text('$' + totalPrice.toFixed(2));
+            });
+
+            $('#book_form').submit(function(event) {
+                event.preventDefault();
+
+                var name = $('#name').val();
+                var email = $('#email').val();
+                var numTickets = $('#num_tickets').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'book_tickets.php',
+                    data: { name: name, email: email, num_tickets: numTickets },
+                    success: function(response) {
+                        $('#message').html(response);
+                    }
+                });
+            });
+        });
+    </script>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"] {
+    width: 90%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+}
+
+button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+#total_price {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+    color: #333;
+}
+
+#message {
+    margin-top: 20px;
+    color: #007bff;
+    font-weight: bold;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Guest Ticket Booking</h1>
+    <form id="book_form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+
+        <label for="num_tickets">Number of Tickets:</label>
+        <input type="number" id="num_tickets" name="num_tickets" min="1" value="1" required><br>
+
+        <label>Total Price:</label>
+        <span id="total_price">$50.00</span><br>
+
+        <button type="submit">Book Tickets</button>
+    </form>
+    <div id="message"></div>
+</body>
+</html>
